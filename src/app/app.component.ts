@@ -2,8 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { NgParticlesService } from '@tsparticles/angular';
 import { loadSlim } from '@tsparticles/slim';
 import { particlesOptions } from './helpers/particles';
-import { ISourceOptions } from '@tsparticles/engine';
-
+import { Engine } from '@tsparticles/engine';
+import { Observable } from 'rxjs';
+import { PersonSummary } from './models/person-summary';
+import { ApiService } from './services/api.service';
+import { GameType } from './helpers/game-types';
 
 @Component({
   selector: 'app-root',
@@ -13,9 +16,13 @@ import { ISourceOptions } from '@tsparticles/engine';
 export class AppComponent implements OnInit {
   title = 'code_and_pepper';
 
-  constructor(private _particlesService: NgParticlesService) { }
+  public selectedGameType?: GameType = undefined;
 
-  particlesOptions: any = particlesOptions;
+  constructor(private _particlesService: NgParticlesService, private _apiService: ApiService) { }
+
+  public particlesOptions: any = particlesOptions;
+
+  public gameType = GameType;
 
   ngOnInit(): void {
     this._loadParticles();
@@ -23,8 +30,18 @@ export class AppComponent implements OnInit {
 
 
   private _loadParticles(): void {
-    this._particlesService.init(async (engine) => {
+    this._particlesService.init(async (engine: Engine) => {
       await loadSlim(engine)
     })
   }
+
+  public getAllPeople(): any {
+    return this._apiService.getPeople().subscribe(v => console.log(v));
+  }
+
+  public setGameType(gameType: GameType): void {
+    this.selectedGameType = gameType;
+  }
+
+
 }
