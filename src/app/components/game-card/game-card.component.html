@@ -1,1 +1,8 @@
-<p>game-card works!</p>
+<mat-card class="card" [@flip]="isCardVisible">
+    <mat-icon *ngIf="isCardVisible">account_circle</mat-icon>
+    <div [@fade]="isCardVisible ? 'visible' : 'hidden'" class="content" >
+        <button>HALINA</button>
+        <div>WALDEK WALDEK WALDEK</div>
+    </div>
+
+</mat-card>

@@ -1,0 +1,31 @@
+.card {
+    height: 350px;
+    width: 250px;
+    background-color: #191919;
+    border-radius: 25px;
+    transition: 1s;
+    position: relative;
+
+    &__flipped {
+        transform: rotateY(180deg);
+    }
+
+    &__winner {
+        transform: scale(1.2);
+        transition: 3s;
+        box-shadow: rgba(72, 135, 202, 0.8) 0 0 90px 33px;
+    }
+
+    mat-icon {
+        position: absolute;
+        color: #fff;
+        z-index: 100;
+        top: 45%;
+        left: 45%;
+        transform: scale(2);
+    }
+}
+
+.content {
+    transition: 1s;
+}

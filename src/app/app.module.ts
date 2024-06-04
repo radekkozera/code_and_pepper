@@ -8,6 +8,10 @@ import { HttpClientModule } from '@angular/common/http';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { GameTypeComponent } from './components/game-type/game-type.component';
 import { GameCardComponent } from './components/game-card/game-card.component';
+import { MatCardModule } from '@angular/material/card';
+import { MatIconModule } from '@angular/material/icon';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner'
+
 
 @NgModule({
   declarations: [
@@ -19,7 +23,10 @@ import { GameCardComponent } from './components/game-card/game-card.component';
     BrowserModule,
     AppRoutingModule,
     NgxParticlesModule,
-    HttpClientModule
+    HttpClientModule,
+    MatCardModule,
+    MatIconModule,
+    MatProgressSpinnerModule
   ],
   providers: [
     provideAnimationsAsync()

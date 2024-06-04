@@ -9,8 +9,13 @@ export class ApiService {
 
     constructor(private _http: HttpClient) { }
 
-    public getPeople(): Observable<PersonSummary> {
-        return this._http.get<PersonSummary>(`${this._url}people`)
+    public getPeople(): Observable<any> {
+        return this._http.get<any>(`${this._url}people`)
+    }
+
+    public getPerson(url: string): Observable<any> {
+        console.log(url)
+        return this._http.get<any>(url)
     }
 
 

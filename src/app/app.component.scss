@@ -4,6 +4,21 @@
     z-index: -1;
 }
 
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 100;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+
+}
+
 .main {
     &__type {
         position: fixed;
@@ -11,6 +26,33 @@
         right: 50%;
         transform: translateX(50%);
         z-index: 100;
+    }
+
+    &__cards {
+        position: fixed;
+        top: 30%;
+        right: 50%;
+        transform: translateX(50%);
+        z-index: 100;
+        display: flex;
+        gap: 25vh;
+
+        &__player {
+            height: 350px;
+            width: 250px;
+            background-color: #191919;
+            border-radius: 25px;
+            border: 1px solid navajowhite;
+            transition: 5s;
+
+            &__flip {
+                transform: rotateY(180deg);
+            }
+
+            &__backflip {
+                transform: rotateY(-180deg);
+            }
+        }
     }
 }
 

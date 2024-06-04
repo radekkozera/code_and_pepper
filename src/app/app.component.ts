@@ -3,7 +3,7 @@ import { NgParticlesService } from '@tsparticles/angular';
 import { loadSlim } from '@tsparticles/slim';
 import { particlesOptions } from './helpers/particles';
 import { Engine } from '@tsparticles/engine';
-import { Observable } from 'rxjs';
+import { Observable, Subject, forkJoin, map, switchMap, tap } from 'rxjs';
 import { PersonSummary } from './models/person-summary';
 import { ApiService } from './services/api.service';
 import { GameType } from './helpers/game-types';
@@ -14,15 +14,27 @@ import { GameType } from './helpers/game-types';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
-  title = 'code_and_pepper';
 
+  public isLoading$: Subject<boolean> = new Subject<boolean>();
+
+  title = 'code_and_pepper';
+  public isCardsVisible: boolean = false;
   public selectedGameType?: GameType = undefined;
+  public particlesOptions: any = particlesOptions;
+  public gameType = GameType;
+
+  public playerOne?: any = undefined;
+  public playerTwo?: any = undefined;
+
+  public playerOneScore: number = 0;
+  public playerTwoScore: number = 0;
+
+  public isPlayerOneWinner: boolean = false;
+  public isPlayerTwoWinner: boolean = false;
+  public isDraw: boolean = false;
 
   constructor(private _particlesService: NgParticlesService, private _apiService: ApiService) { }
 
-  public particlesOptions: any = particlesOptions;
-
-  public gameType = GameType;
 
   ngOnInit(): void {
     this._loadParticles();
@@ -35,13 +47,38 @@ export class AppComponent implements OnInit {
     })
   }
 
-  public getAllPeople(): any {
-    return this._apiService.getPeople().subscribe(v => console.log(v));
-  }
-
   public setGameType(gameType: GameType): void {
     this.selectedGameType = gameType;
   }
+
+  public showCards(): void {
+    this.isCardsVisible = !this.isCardsVisible;
+  }
+
+  public playGame(): void {
+    this._apiService.getPeople().pipe(
+      map((people: any) => this._getRandomElements(people.results)),
+      switchMap((people: any) => forkJoin(people.map((person: any) => this._apiService.getPerson(person.url)))
+      ),
+    ).subscribe((v: any) => {
+      this.playerOne = v[0];
+      this.playerTwo = v[1];
+      this._determineWinner(v[1], v[0]);
+      this.showCards();
+    })
+  }
+
+  private _getRandomElements(array: any[]): any[] {
+    return (array.sort(() => Math.random() - 0.5)).slice(0, 2);
+  }
+
+  private _determineWinner(playerOne: any, playerTwo: any): any {
+    this.isPlayerOneWinner = playerOne.result.properties.mass > playerTwo.result.properties.mass;
+    this.isPlayerTwoWinner = playerOne.result.properties.mass < playerTwo.result.properties.mass;
+    this.isDraw = playerOne.result.properties.mass === playerTwo.result.properties.mass;
+  }
+
+
 
 
 }
