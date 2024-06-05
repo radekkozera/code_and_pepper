@@ -4,7 +4,6 @@ import { loadSlim } from '@tsparticles/slim';
 import { particlesOptions } from './helpers/particles';
 import { Engine } from '@tsparticles/engine';
 import { Observable, Subject, forkJoin, map, switchMap, tap } from 'rxjs';
-import { PersonSummary } from './models/person-summary';
 import { ApiService } from './services/api.service';
 import { GameType } from './helpers/game-types';
 
