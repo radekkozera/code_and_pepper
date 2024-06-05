@@ -6,6 +6,12 @@ import { Engine } from '@tsparticles/engine';
 import { Observable, Subject, forkJoin, map, switchMap, tap } from 'rxjs';
 import { ApiService } from './services/api.service';
 import { GameType } from './helpers/game-types';
+import { StarshipResult } from './models/starship.result';
+import { PersonResult } from './models/person-result';
+import { ApiResponse } from './models/api-response';
+import { Person } from './models/person';
+import { Starship } from './models/starship';
+import { ElementResponse } from './models/element.response';
 
 @Component({
   selector: 'app-root',
@@ -13,17 +19,16 @@ import { GameType } from './helpers/game-types';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
-
   public isLoading$: Subject<boolean> = new Subject<boolean>();
 
   title = 'code_and_pepper';
   public isCardsVisible: boolean = false;
-  public selectedGameType?: GameType = undefined;
+  public selectedGameType?: GameType = GameType.ROCKETS;
   public particlesOptions: any = particlesOptions;
   public gameType = GameType;
 
-  public playerOne?: any = undefined;
-  public playerTwo?: any = undefined;
+  public playerOne?: PersonResult | StarshipResult = undefined;
+  public playerTwo?: PersonResult | StarshipResult = undefined;
 
   public playerOneScore: number = 0;
   public playerTwoScore: number = 0;
@@ -55,30 +60,41 @@ export class AppComponent implements OnInit {
   }
 
   public playGame(): void {
-    this._apiService.getPeople().pipe(
-      map((people: any) => this._getRandomElements(people.results)),
-      switchMap((people: any) => forkJoin(people.map((person: any) => this._apiService.getPerson(person.url)))
+    this._getElements().pipe(
+      map((response: ApiResponse<Person | Starship>) => this._getRandomElements(response.results)),
+      switchMap((result: Person[] | Starship[]) => forkJoin(result.map((element: Person | Starship) => this._getElement(element.url)))
       ),
-      tap(([playerOne, playerTwo]: any) => {
-        this.playerOne = playerOne;
-        this.playerTwo = playerTwo;
-        this._determineWinner(playerOne, playerTwo);
+      tap(([playerOne, playerTwo]) => {
+        this._determineWinner(playerOne.result, playerTwo.result);
         this.toggleCardsVisibility();
       })
     ).subscribe()
   }
 
-  private _getRandomElements(array: any[]): any[] {
+  private _getElements(): Observable<ApiResponse<Person | Starship>> {
+    return this.selectedGameType === GameType.PEOPLE ? this._apiService.getPeople() : this._apiService.getStarships();
+  }
+
+  private _getElement(url: string): Observable<ElementResponse<PersonResult | StarshipResult>> {
+    return this.selectedGameType === GameType.PEOPLE ? this._apiService.getPerson(url) : this._apiService.getStarship(url);
+  }
+
+  private _getRandomElements<T>(array: T[]): T[] {
     return (array.sort(() => Math.random() - 0.5)).slice(0, 2);
   }
 
-  private _determineWinner(playerOne: any, playerTwo: any): any {
-    const playerOneMass = +playerOne.result.properties.mass;
-    const playerTwoMass = +playerTwo.result.properties.mass;
+  private _determineWinner(playerOne: PersonResult | StarshipResult, playerTwo: PersonResult | StarshipResult): any {
 
-    this.isPlayerOneWinner = playerOneMass > playerTwoMass;
-    this.isPlayerTwoWinner = playerOneMass < playerTwoMass;
-    this.isDraw = playerOneMass === playerTwoMass;
+    this.playerOne = playerOne;
+    this.playerTwo = playerTwo;
+
+
+    // const playerOneMass = +playerOne.properties.mass;
+    // const playerTwoMass = +playerTwo.properties.mass;
+
+    // this.isPlayerOneWinner = playerOneMass > playerTwoMass;
+    // this.isPlayerTwoWinner = playerOneMass < playerTwoMass;
+    // this.isDraw = playerOneMass === playerTwoMass;
   }
 
   public toggleCardsVisibility(): void {
