@@ -1,8 +1,20 @@
-<mat-card class="card" [@flip]="isCardVisible">
-    <mat-icon *ngIf="isCardVisible">account_circle</mat-icon>
-    <div [@fade]="isCardVisible ? 'visible' : 'hidden'" class="content" >
-        <button>HALINA</button>
-        <div>WALDEK WALDEK WALDEK</div>
+<mat-card class="card" [ngClass]="{'card__flipped': isCardVisible}">
+    <div class="card__front">
+        <mat-icon *ngIf="gameType !== GameType.PEOPLE">person</mat-icon>
+        <mat-icon *ngIf="gameType === GameType.ROCKETS">flight</mat-icon>
+    </div>
+
+    <div class="card__back" [ngClass]="{'card__back__winner': isCardVisible}">
+
+        <div class="card__back__icon">
+            <mat-icon *ngIf="gameType !== GameType.PEOPLE">person</mat-icon>
+            <!-- <mat-icon *ngIf="gameType === GameType.ROCKETS">flight</mat-icon> -->
+        </div>
+
+        <span>Obi Wan Kenobee</span>
+
+        <span>Age: 25</span>
+
     </div>
 
 </mat-card>

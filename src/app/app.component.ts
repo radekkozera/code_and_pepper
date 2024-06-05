@@ -60,12 +60,13 @@ export class AppComponent implements OnInit {
       map((people: any) => this._getRandomElements(people.results)),
       switchMap((people: any) => forkJoin(people.map((person: any) => this._apiService.getPerson(person.url)))
       ),
-    ).subscribe((v: any) => {
-      this.playerOne = v[0];
-      this.playerTwo = v[1];
-      this._determineWinner(v[1], v[0]);
-      this.showCards();
-    })
+      tap(([playerOne, playerTwo]: any) => {
+        this.playerOne = playerOne;
+        this.playerTwo = playerTwo;
+        this._determineWinner(playerOne, playerTwo);
+        this.toggleCardsVisibility();
+      })
+    ).subscribe()
   }
 
   private _getRandomElements(array: any[]): any[] {
@@ -73,9 +74,16 @@ export class AppComponent implements OnInit {
   }
 
   private _determineWinner(playerOne: any, playerTwo: any): any {
-    this.isPlayerOneWinner = playerOne.result.properties.mass > playerTwo.result.properties.mass;
-    this.isPlayerTwoWinner = playerOne.result.properties.mass < playerTwo.result.properties.mass;
-    this.isDraw = playerOne.result.properties.mass === playerTwo.result.properties.mass;
+    const playerOneMass = +playerOne.result.properties.mass;
+    const playerTwoMass = +playerTwo.result.properties.mass;
+
+    this.isPlayerOneWinner = playerOneMass > playerTwoMass;
+    this.isPlayerTwoWinner = playerOneMass < playerTwoMass;
+    this.isDraw = playerOneMass === playerTwoMass;
+  }
+
+  public toggleCardsVisibility(): void {
+    this.isCardsVisible = !this.isCardsVisible;
   }
 
 

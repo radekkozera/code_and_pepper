@@ -11,13 +11,16 @@ import { GameCardComponent } from './components/game-card/game-card.component';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner'
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ScoreComponent } from './components/score/score.component';
 
 
 @NgModule({
   declarations: [
     AppComponent,
     GameTypeComponent,
-    GameCardComponent
+    GameCardComponent,
+    ScoreComponent
   ],
   imports: [
     BrowserModule,
@@ -26,7 +29,8 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner'
     HttpClientModule,
     MatCardModule,
     MatIconModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    BrowserAnimationsModule,
   ],
   providers: [
     provideAnimationsAsync()
