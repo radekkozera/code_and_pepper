@@ -9,9 +9,11 @@
     <app-game-stats></app-game-stats>
   </div>
   <div class="main__cards">
-    <app-game-card [isWinner]="isPlayerOneWinner" [isCardVisible]="isCardsVisible"></app-game-card>
+    <app-game-card [isWinner]="!!(isPlayerOneWinner$ | async)" [personResult]="playerOnePerson"
+      [starshipResult]="playerOneStarship"></app-game-card>
 
-    <app-game-card [isWinner]="isPlayerTwoWinner" [isCardVisible]="isCardsVisible"></app-game-card>
+    <app-game-card [isWinner]="!!(isPlayerTwoWinner$ | async)" [personResult]="playerTwoPerson"
+      [starshipResult]="playerTwoStarship"></app-game-card>
   </div>
 
 

@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { GameTypeComponent } from './game-type.component';
+import { GameFinishModalComponent } from './game-finish-modal.component';
 
-describe('GameTypeComponent', () => {
-  let component: GameTypeComponent;
-  let fixture: ComponentFixture<GameTypeComponent>;
+describe('GameFinishModalComponent', () => {
+  let component: GameFinishModalComponent;
+  let fixture: ComponentFixture<GameFinishModalComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [GameTypeComponent]
+      declarations: [GameFinishModalComponent]
     })
     .compileComponents();
     
-    fixture = TestBed.createComponent(GameTypeComponent);
+    fixture = TestBed.createComponent(GameFinishModalComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

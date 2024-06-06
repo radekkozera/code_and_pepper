@@ -1,19 +1,29 @@
-<mat-card class="card" [ngClass]="{'card__flipped': isCardVisible}">
+<mat-card class="card" [ngClass]="{'card__flipped': isGameInProgress$ | async}">
     <div class="card__front">
         <mat-icon *ngIf="(gameType$ | async) === GameType.PEOPLE">person</mat-icon>
         <mat-icon *ngIf="(gameType$ | async) === GameType.ROCKETS">flight</mat-icon>
     </div>
 
-    <div class="card__back" [ngClass]="{'card__back__winner': isCardVisible}">
+    <div class="card__back" [ngClass]="{'card__back__winner': isWinner}">
 
         <div class="card__back__icon">
             <mat-icon *ngIf="(gameType$ | async) === GameType.PEOPLE">person</mat-icon>
             <mat-icon *ngIf="(gameType$ | async) === GameType.ROCKETS">flight</mat-icon>
         </div>
 
-        <span>Obi Wan Kenobee</span>
+        <ng-container *ngIf="personResult">
 
-        <span>Age: 25</span>
+            <span>{{personResult.properties.name}}</span>
+            <span>{{personResult.properties.mass}}</span>
+
+        </ng-container>
+
+        <ng-container *ngIf="starshipResult">
+
+            <span>{{starshipResult.properties.model}}</span>
+            <span>{{starshipResult.properties.crew}}</span>
+
+        </ng-container>
 
     </div>
 

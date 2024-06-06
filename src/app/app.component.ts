@@ -3,7 +3,7 @@ import { NgParticlesService } from '@tsparticles/angular';
 import { loadSlim } from '@tsparticles/slim';
 import { particlesOptions } from './helpers/particles';
 import { Engine } from '@tsparticles/engine';
-import { Observable, Subject, forkJoin, map, switchMap, tap } from 'rxjs';
+import { Observable, Subject, delay, forkJoin, map, switchMap, tap } from 'rxjs';
 import { ApiService } from './services/api.service';
 import { GameType } from './helpers/game-types';
 import { StarshipResult } from './models/starship.result';
@@ -13,6 +13,8 @@ import { Person } from './models/person';
 import { Starship } from './models/starship';
 import { ElementResponse } from './models/element.response';
 import { StateService } from './services/state.service';
+import { MatDialog } from '@angular/material/dialog';
+import { GameFinishModalComponent } from './components/game-finish/game-finish-modal.component';
 
 @Component({
   selector: 'app-root',
@@ -22,24 +24,29 @@ import { StateService } from './services/state.service';
 export class AppComponent implements OnInit {
   public isLoading$: Subject<boolean> = new Subject<boolean>();
   public gameType$: Observable<GameType>;
+  public isGameInProgress$: Observable<boolean>;
+  public isPlayerOneWinner$: Observable<boolean>;
+  public isPlayerTwoWinner$: Observable<boolean>;
 
-  title = 'code_and_pepper';
   public isCardsVisible: boolean = false;
   public particlesOptions: any = particlesOptions;
 
-  public playerOne?: PersonResult | StarshipResult = undefined;
-  public playerTwo?: PersonResult | StarshipResult = undefined;
+  public playerOnePerson?: PersonResult = undefined;
+  public playerTwoPerson?: PersonResult = undefined;
 
-  public playerOneScore: number = 0;
-  public playerTwoScore: number = 0;
+  public playerOneStarship?: StarshipResult = undefined;
+  public playerTwoStarship?: StarshipResult = undefined;
 
-  public isPlayerOneWinner: boolean = false;
-  public isPlayerTwoWinner: boolean = false;
   public isDraw: boolean = false;
 
+  public readonly GameType = GameType;
+
   constructor(private _particlesService: NgParticlesService,
-    private _apiService: ApiService, private _appState: StateService) {
+    private _apiService: ApiService, private _appState: StateService, private _dialog: MatDialog) {
     this.gameType$ = this._appState.gameState;
+    this.isGameInProgress$ = this._appState.isGameInProgress;
+    this.isPlayerOneWinner$ = this._appState.isPlayerOneWinner;
+    this.isPlayerTwoWinner$ = this._appState.isPlayerTwoWinner;
   }
 
 
@@ -60,14 +67,18 @@ export class AppComponent implements OnInit {
   }
 
   public playGame(gameType: GameType): void {
+    this._resetGame();
+    this._appState.isGameInProgress.next(true);
     this._getElements(gameType).pipe(
       map((response: ApiResponse<Person | Starship>) => this._getRandomElements(response.results)),
       switchMap((result: Person[] | Starship[]) => forkJoin(result.map((element: Person | Starship) => this._getElement(gameType, element.url)))
       ),
       tap(([playerOne, playerTwo]) => {
-        this._determineWinner(playerOne.result, playerTwo.result);
-        this.toggleCardsVisibility();
-      })
+        this._determineWinner(gameType, playerOne.result, playerTwo.result
+        );
+      }),
+      delay(2500),
+      tap(() => this._openModal())
     ).subscribe()
   }
 
@@ -83,23 +94,71 @@ export class AppComponent implements OnInit {
     return (array.sort(() => Math.random() - 0.5)).slice(0, 2);
   }
 
-  private _determineWinner(playerOne: PersonResult | StarshipResult, playerTwo: PersonResult | StarshipResult): any {
-
-    this.playerOne = playerOne;
-    this.playerTwo = playerTwo;
-
-
-    // const playerOneMass = +playerOne.properties.mass;
-    // const playerTwoMass = +playerTwo.properties.mass;
-
-    // this.isPlayerOneWinner = playerOneMass > playerTwoMass;
-    // this.isPlayerTwoWinner = playerOneMass < playerTwoMass;
-    // this.isDraw = playerOneMass === playerTwoMass;
+  private _determineWinner(gameType: GameType, playerOne: PersonResult | StarshipResult, playerTwo: PersonResult | StarshipResult): void {
+    if (gameType === GameType.PEOPLE) {
+      this._determineWinnerPeople(playerOne as PersonResult, playerTwo as PersonResult);
+    } else {
+      this._determineWinnerStarships(playerOne as StarshipResult, playerTwo as StarshipResult);
+    }
   }
 
-  public toggleCardsVisibility(): void {
-    this.isCardsVisible = !this.isCardsVisible;
+  private _determineWinnerPeople(playerOne: PersonResult, playerTwo: PersonResult): any {
+    this.playerOnePerson = playerOne;
+    this.playerTwoPerson = playerTwo;
+    const winner = playerOne.properties.mass > playerTwo.properties.mass ? playerOne : playerTwo;
+
+    if (winner === playerOne) {
+      this._appState.playerOneScore.next(this._appState.playerOneScore.value + 1);
+      this._appState.isPlayerOneWinner.next(true);
+      this._appState.isPlayerTwoWinner.next(false);
+    }
+
+    if (winner === playerTwo) {
+      this._appState.playerTwoScore.next(this._appState.playerTwoScore.value + 1);
+      this._appState.isPlayerTwoWinner.next(true);
+      this._appState.isPlayerOneWinner.next(false);
+    }
+
   }
+
+  private _determineWinnerStarships(playerOne: StarshipResult, playerTwo: StarshipResult): void {
+    this.playerOneStarship = playerOne;
+    this.playerTwoStarship = playerTwo;
+
+    const winner = playerOne.properties.crew > playerTwo.properties.crew ? playerOne : playerTwo;
+
+    if (winner === playerOne) {
+      this._appState.playerOneScore.next(this._appState.playerOneScore.value + 1);
+      this._appState.isPlayerOneWinner.next(true);
+      this._appState.isPlayerTwoWinner.next(false);
+    }
+
+    if (winner === playerTwo) {
+      this._appState.playerTwoScore.next(this._appState.playerTwoScore.value + 1);
+      this._appState.isPlayerTwoWinner.next(true);
+      this._appState.isPlayerOneWinner.next(false);
+    }
+  }
+
+  private _openModal(): void {
+    this._dialog.open(GameFinishModalComponent, {
+      height: '200px',
+      width: '300px',
+      position: {
+        top: '100px'
+      },
+      disableClose: true
+    })
+  }
+
+  private _resetGame(): void {
+    this.playerOnePerson = undefined;
+    this.playerTwoPerson = undefined;
+    this.playerOneStarship = undefined;
+    this.playerTwoStarship = undefined;
+  }
+
+
 
 
 
