@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { GameFinishModalComponent } from './game-finish-modal.component';
+import { MatDialogRef } from '@angular/material/dialog';
 
 describe('GameFinishModalComponent', () => {
   let component: GameFinishModalComponent;
@@ -8,10 +9,11 @@ describe('GameFinishModalComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [GameFinishModalComponent]
+      declarations: [GameFinishModalComponent],
+      providers: [{ provide: MatDialogRef, useValue: {} }]
     })
-    .compileComponents();
-    
+      .compileComponents();
+
     fixture = TestBed.createComponent(GameFinishModalComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

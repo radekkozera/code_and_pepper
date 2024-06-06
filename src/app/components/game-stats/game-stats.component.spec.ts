@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { GameStatsComponent } from './game-stats.component';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 describe('GameStatsComponent', () => {
   let component: GameStatsComponent;
@@ -8,7 +9,8 @@ describe('GameStatsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [GameStatsComponent]
+      declarations: [GameStatsComponent],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA],
     })
     .compileComponents();
     
