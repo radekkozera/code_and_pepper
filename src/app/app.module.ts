@@ -13,6 +13,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner'
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ScoreComponent } from './components/score/score.component';
+import { GameStatsComponent } from './components/game-stats/game-stats.component';
 
 
 @NgModule({
@@ -20,7 +21,8 @@ import { ScoreComponent } from './components/score/score.component';
     AppComponent,
     GameTypeComponent,
     GameCardComponent,
-    ScoreComponent
+    ScoreComponent,
+    GameStatsComponent
   ],
   imports: [
     BrowserModule,

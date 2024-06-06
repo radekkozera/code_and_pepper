@@ -12,6 +12,7 @@ import { ApiResponse } from './models/api-response';
 import { Person } from './models/person';
 import { Starship } from './models/starship';
 import { ElementResponse } from './models/element.response';
+import { StateService } from './services/state.service';
 
 @Component({
   selector: 'app-root',
@@ -20,12 +21,11 @@ import { ElementResponse } from './models/element.response';
 })
 export class AppComponent implements OnInit {
   public isLoading$: Subject<boolean> = new Subject<boolean>();
+  public gameType$: Observable<GameType>;
 
   title = 'code_and_pepper';
   public isCardsVisible: boolean = false;
-  public selectedGameType?: GameType = GameType.ROCKETS;
   public particlesOptions: any = particlesOptions;
-  public gameType = GameType;
 
   public playerOne?: PersonResult | StarshipResult = undefined;
   public playerTwo?: PersonResult | StarshipResult = undefined;
@@ -37,7 +37,10 @@ export class AppComponent implements OnInit {
   public isPlayerTwoWinner: boolean = false;
   public isDraw: boolean = false;
 
-  constructor(private _particlesService: NgParticlesService, private _apiService: ApiService) { }
+  constructor(private _particlesService: NgParticlesService,
+    private _apiService: ApiService, private _appState: StateService) {
+    this.gameType$ = this._appState.gameState;
+  }
 
 
   ngOnInit(): void {
@@ -51,18 +54,15 @@ export class AppComponent implements OnInit {
     })
   }
 
-  public setGameType(gameType: GameType): void {
-    this.selectedGameType = gameType;
-  }
 
   public showCards(): void {
     this.isCardsVisible = !this.isCardsVisible;
   }
 
-  public playGame(): void {
-    this._getElements().pipe(
+  public playGame(gameType: GameType): void {
+    this._getElements(gameType).pipe(
       map((response: ApiResponse<Person | Starship>) => this._getRandomElements(response.results)),
-      switchMap((result: Person[] | Starship[]) => forkJoin(result.map((element: Person | Starship) => this._getElement(element.url)))
+      switchMap((result: Person[] | Starship[]) => forkJoin(result.map((element: Person | Starship) => this._getElement(gameType, element.url)))
       ),
       tap(([playerOne, playerTwo]) => {
         this._determineWinner(playerOne.result, playerTwo.result);
@@ -71,12 +71,12 @@ export class AppComponent implements OnInit {
     ).subscribe()
   }
 
-  private _getElements(): Observable<ApiResponse<Person | Starship>> {
-    return this.selectedGameType === GameType.PEOPLE ? this._apiService.getPeople() : this._apiService.getStarships();
+  private _getElements(gameType: GameType): Observable<ApiResponse<Person | Starship>> {
+    return gameType === GameType.PEOPLE ? this._apiService.getPeople() : this._apiService.getStarships();
   }
 
-  private _getElement(url: string): Observable<ElementResponse<PersonResult | StarshipResult>> {
-    return this.selectedGameType === GameType.PEOPLE ? this._apiService.getPerson(url) : this._apiService.getStarship(url);
+  private _getElement(gameType: GameType, url: string): Observable<ElementResponse<PersonResult | StarshipResult>> {
+    return gameType === GameType.PEOPLE ? this._apiService.getPerson(url) : this._apiService.getStarship(url);
   }
 
   private _getRandomElements<T>(array: T[]): T[] {

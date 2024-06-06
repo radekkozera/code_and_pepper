@@ -1,0 +1,59 @@
+.game {
+    width: 700px;
+    height: 100px;
+    background-color: #191919;
+    border-radius: 25px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    align-content: center;
+    padding: 0 25px;
+
+    &__player {
+        color: #fff;
+
+        &__winner{
+            color: rgba(72, 135, 202, 0.8);
+            transform: scale(1.3);
+        }
+
+    }
+
+    &__select {
+        display: flex;
+        background-color: #808080;
+        border-radius: 30px;
+        padding: 1px;
+
+        mat-icon {
+            transform: scale(1.5);
+        }
+
+        &__starship {
+            border-top-left-radius: 30px;
+            border-bottom-left-radius: 30px;
+            padding: 20px 30px;
+
+        }
+
+        &__people {
+            border-top-right-radius: 30px;
+            border-bottom-right-radius: 30px;
+            padding: 20px 30px;
+        }
+
+        &__selected {
+            background-color: #191919;
+            border-radius: 30px;
+            color: #fff;
+        }
+
+    }
+
+}
+
+
+.selected {
+    background-color: red;
+    border-radius: 30px;
+}

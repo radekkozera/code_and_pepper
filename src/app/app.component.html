@@ -6,7 +6,7 @@
 
 <div class="main">
   <div class="main__type" *ngIf="true">
-    <app-game-type></app-game-type>
+    <app-game-stats></app-game-stats>
   </div>
   <div class="main__cards">
     <app-game-card [isWinner]="isPlayerOneWinner" [isCardVisible]="isCardsVisible"></app-game-card>
@@ -14,8 +14,9 @@
     <app-game-card [isWinner]="isPlayerTwoWinner" [isCardVisible]="isCardsVisible"></app-game-card>
   </div>
 
-  <button style="position: fixed; z-index: 100;" (click)="playGame()">CHECK</button>
 
-  <!-- <app-score style="position: fixed; z-index: 100;"></app-score> -->
+
+  <button *ngIf="(gameType$ | async) as gameType" style="position: fixed; z-index: 100;"
+    (click)="playGame(gameType)">CHECK</button>
 
 </div>

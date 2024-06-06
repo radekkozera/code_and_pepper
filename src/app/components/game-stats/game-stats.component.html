@@ -1,0 +1,17 @@
+<div class="game">
+    <div class="game__player game__player__winner">25</div>
+    <div class="game__select">
+
+        <div (click)="selectGame(GameType.ROCKETS)" class="game__select__starship"
+            [ngClass]="{'game__select__selected' : (gameType$| async) === GameType.ROCKETS}">
+            <mat-icon>flight</mat-icon>
+        </div>
+        <div (click)="selectGame(GameType.PEOPLE)" class="game__select__people"
+            [ngClass]="{'game__select__selected' : (gameType$| async) === GameType.PEOPLE}">
+            <mat-icon>person</mat-icon>
+        </div>
+
+    </div>
+    <div class="game__player">30</div>
+
+</div>
