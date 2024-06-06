@@ -43,6 +43,7 @@ export class AppComponent implements OnInit {
 
   constructor(private _particlesService: NgParticlesService,
     private _apiService: ApiService, private _appState: StateService, private _dialog: MatDialog) {
+    
     this.gameType$ = this._appState.gameState;
     this.isGameInProgress$ = this._appState.isGameInProgress;
     this.isPlayerOneWinner$ = this._appState.isPlayerOneWinner;
