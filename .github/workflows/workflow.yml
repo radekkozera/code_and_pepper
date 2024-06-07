@@ -1,10 +1,8 @@
-name: Continuous Integration
+name: Tests
 
 on:
   push:
-    branches: [ "master", "develop" ]
-  pull_request:
-    branches: [ "master", "develop" ]
+    branches: [ "main", "develop" ]
 
 jobs:
 
