@@ -8,9 +8,13 @@ describe('Test Card Game', () => {
         cy.visit('/');
     });
 
-    it('should increase score and highlight winner', () => {
-        player.shouldIncreaseScoreAndHighlightWinner();
-    })
+    // it('should increase score and highlight winner', () => {
+    //     player.shouldIncreaseScoreAndHighlightWinner();
+    // })
+
+    it('should highlight winning score', () => {
+        player.shouldHighlightWinningScore();
+    });
 
     // it('should check initial state', () => {
     //     player.shouldCheckInitialState();

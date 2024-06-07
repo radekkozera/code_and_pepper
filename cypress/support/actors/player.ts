@@ -42,6 +42,11 @@ export class Player {
         game.shouldIncreaseScoreAndHighlightWinner();
     }
 
+    public shouldHighlightWinningScore() {
+        const game = this.gameView();
+        game.shouldHighlightWinningScore();
+    }
+
 
 
 }

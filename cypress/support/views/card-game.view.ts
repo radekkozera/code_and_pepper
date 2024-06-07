@@ -15,8 +15,8 @@ export class CardGame {
     private GAME_TYPE_PEOPLE = 'game-type-people';
     private GAME_CARD = 'game-card';
     private GAME_FINISH = 'game-finish';
-    private GAME_BACK_PLAYER_1 = 'game-back-player-1';
-    private GAME_BACK_PLAYER_2 = 'game-back-player-2';
+    private GAME_CARD_PLAYER_1 = 'game-card-player-1';
+    private GAME_CARD_PLAYER_2 = 'game-card-player-2';
 
     private DELAY_TIME = 4000;
 
@@ -27,8 +27,12 @@ export class CardGame {
         this.startButton().should('have.text', 'START')
 
         // Top Bar
-        this.playerOneScore().eq(0);
-        this.playerTwoScore().eq(0);
+        this.playerOneScore().invoke('text').then((text) => {
+            expect(parseInt(text)).to.eq(0)
+        });
+        this.playerTwoScore().invoke('text').then((text) => {
+            expect(parseInt(text)).to.eq(0)
+        });
 
         // Cards
         this.playerOneCard().should('exist')
@@ -66,8 +70,12 @@ export class CardGame {
         this.startButton().click();
         cy.wait(this.DELAY_TIME);
         this.resetButton().click();
-        this.playerOneScore().eq(0);
-        this.playerTwoScore().eq(0);
+        this.playerOneScore().invoke('text').then((text) => {
+            expect(parseInt(text)).to.eq(0)
+        });
+        this.playerTwoScore().invoke('text').then((text) => {
+            expect(parseInt(text)).to.eq(0)
+        });
         this.gameFinish().should('not.exist');
     }
 
@@ -95,23 +103,67 @@ export class CardGame {
 
         cy.then(() => {
             if (scorePlayerOne > scorePlayerTwo) {
-                this.playerOneScore().eq(1);
-                this.playerTwoScore().eq(0);
-                this.gameBackPlayerOne().should('have.class', 'card__back__winner');
+                this.playerOneScore().invoke('text').then((score) => {
+                    expect(parseInt(score)).to.eq(1)
+                })
+                this.playerTwoScore().invoke('text').then((score) => {
+                    expect(parseInt(score)).to.eq(0)
+                })
+                this.gameCardPlayerOne().should('have.class', 'card__back__winner');
             } else if (scorePlayerOne < scorePlayerTwo) {
-                this.playerOneScore().eq(0);
-                this.playerTwoScore().eq(1);
-                this.gameBackPlayerTwo().should('have.class', 'card__back__winner');
+                this.playerOneScore().invoke('text').then((score) => {
+                    expect(parseInt(score)).to.eq(0)
+                })
+                this.playerTwoScore().invoke('text').then((score) => {
+                    expect(parseInt(score)).to.eq(1)
+                })
+                this.gameCardPlayerTwo().should('have.class', 'card__back__winner');
             } else {
-                this.playerOneScore().eq(0);
-                this.playerTwoScore().eq(0);
+                this.playerOneScore().invoke('text').then((score) => {
+                    expect(parseInt(score)).to.eq(0)
+                })
+                this.playerTwoScore().invoke('text').then((score) => {
+                    expect(parseInt(score)).to.eq(0)
+                })
             }
         })
 
     }
 
+    public shouldHighlightWinningScore() {
+        let scorePlayerOne: number = 0;
+        let scorePlayerTwo: number = 0;
+
+        this.startButton().click();
+        cy.wait(this.DELAY_TIME);
+
+        this.gameResultPlayerOne().invoke('text').then((text) => {
+            scorePlayerOne = parseInt(text);
+        });
+
+        this.gameResultPlayerTwo().invoke('text').then((text) => {
+            scorePlayerTwo = parseInt(text);
+        });
+
+        cy.wait(this.DELAY_TIME);
 
 
+        cy.then(() => {
+
+            console.log(scorePlayerOne)
+            console.log(scorePlayerTwo)
+
+            if (scorePlayerOne > scorePlayerTwo) {
+                this.playerOneScore().should('have.class', 'game__player__winner');
+            }
+
+            if (scorePlayerOne < scorePlayerTwo) {
+                this.playerTwoScore().should('have.class', 'game__player__winner');
+            }
+        })
+
+
+    }
 
     private playerOneScore() {
         return cy.get('[data-cy=' + this.GAME_SCORE_PLAYER_1 + ']');
@@ -173,29 +225,12 @@ export class CardGame {
         return cy.get('[data-cy=' + this.GAME_RESULT_PLAYER_2 + ']');
     }
 
-    private gameBackPlayerOne() {
-        return cy.get('[data-cy=' + this.GAME_BACK_PLAYER_1 + ']');
+    private gameCardPlayerOne() {
+        return cy.get('[data-cy=' + this.GAME_CARD_PLAYER_1 + ']');
     }
 
-    private gameBackPlayerTwo() {
-        return cy.get('[data-cy=' + this.GAME_BACK_PLAYER_2 + ']');
+    private gameCardPlayerTwo() {
+        return cy.get('[data-cy=' + this.GAME_CARD_PLAYER_2 + ']');
     }
-
-
-    // private gameCardPeople() {
-    //     return cy.getByDataCy(this.GAME_CARD_PEOPLE);
-    // }
-
-    // private gameCardStarships() {
-    //     return cy.getByDataCy(this.GAME_CARD_STARSHIPS);
-    // }
-
-    // private gameResultPlayerOne() {
-    //     return cy.getByDataCy(this.GAME_RESULT_PLAYER_1);
-    // }
-
-    // private gameResultPlayerTwo() {
-    //     return cy.getByDataCy(this.GAME_RESULT_PLAYER_2);
-    // }
 
 }

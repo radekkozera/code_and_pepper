@@ -39,11 +39,10 @@
         border-radius: 25px;
         transform: rotateY(180deg);
         justify-content: space-evenly;
-    }
 
-    &__back {
-        transform: rotateY(180deg);
-        justify-content: space-evenly;
+        &__label{
+            text-align: center;
+        }
 
         &__winner {
             box-shadow: rgba(72, 135, 202, 0.8) 0 0 90px 33px;
@@ -62,4 +61,5 @@
             }
         }
     }
+
 }

@@ -5,8 +5,7 @@
     <div class="game__select">
 
         <ng-container *ngIf="!(isGameInProgress$ | async)">
-            <div data-cy="game-type-starships" (click)="selectGame(GameType.ROCKETS)"
-                class="game__select__starship"
+            <div data-cy="game-type-starships" (click)="selectGame(GameType.ROCKETS)" class="game__select__starship"
                 [ngClass]="{'game__select__selected' : (gameType$| async) === GameType.ROCKETS}">
                 <mat-icon>flight</mat-icon>
             </div>

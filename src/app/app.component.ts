@@ -77,6 +77,7 @@ export class AppComponent implements OnInit {
       tap(([playerOne, playerTwo]) => {
         this._determineWinner(gameType, playerOne.result, playerTwo.result
         );
+        this._appState.isGameInProgress$.next(true);
       }),
       delay(2500),
       tap(() => this.openModal())
@@ -106,17 +107,17 @@ export class AppComponent implements OnInit {
   private _determineWinnerPeople(playerOne: PersonResult, playerTwo: PersonResult): void {
     this.playerOnePerson = playerOne;
     this.playerTwoPerson = playerTwo;
-    const winner = playerOne.properties.mass > playerTwo.properties.mass ? playerOne : playerTwo;
 
-    if (winner === playerOne) {
-      this._appState.playerOneScore$.next(this._appState.playerOneScore$.value + 1);
+    if (Number(playerOne.properties.mass) > Number(playerTwo.properties.mass)) {
+      this._appState.playerOneScore$.next(this._appState.playerTwoScore$.value + 1);
       this._appState.isPlayerOneWinner$.next(true);
       this._appState.isPlayerTwoWinner$.next(false);
-    }
-
-    if (winner === playerTwo) {
+    } else if (Number(playerOne.properties.mass) < Number(playerTwo.properties.mass)) {
       this._appState.playerTwoScore$.next(this._appState.playerTwoScore$.value + 1);
       this._appState.isPlayerTwoWinner$.next(true);
+      this._appState.isPlayerOneWinner$.next(false);
+    } else {
+      this._appState.isPlayerTwoWinner$.next(false);
       this._appState.isPlayerOneWinner$.next(false);
     }
 
@@ -126,17 +127,16 @@ export class AppComponent implements OnInit {
     this.playerOneStarship = playerOne;
     this.playerTwoStarship = playerTwo;
 
-    const winner = playerOne.properties.crew > playerTwo.properties.crew ? playerOne : playerTwo;
-
-    if (winner === playerOne) {
+    if (this.parseCrew(playerOne.properties.crew) > this.parseCrew(playerTwo.properties.crew)) {
       this._appState.playerOneScore$.next(this._appState.playerOneScore$.value + 1);
       this._appState.isPlayerOneWinner$.next(true);
       this._appState.isPlayerTwoWinner$.next(false);
-    }
-
-    if (winner === playerTwo) {
+    } else if (this.parseCrew(playerOne.properties.crew) < this.parseCrew(playerTwo.properties.crew)) {
       this._appState.playerTwoScore$.next(this._appState.playerTwoScore$.value + 1);
       this._appState.isPlayerTwoWinner$.next(true);
+      this._appState.isPlayerOneWinner$.next(false);
+    } else {
+      this._appState.isPlayerTwoWinner$.next(false);
       this._appState.isPlayerOneWinner$.next(false);
     }
   }
@@ -159,7 +159,6 @@ export class AppComponent implements OnInit {
 
   private _resetGame(): void {
     this._appState.showStart$.next(false);
-    this._appState.isGameInProgress$.next(true);
     this._appState.isPlayerOneWinner$.next(false);
     this._appState.isPlayerTwoWinner$.next(false);
     this.playerOnePerson = undefined;
@@ -169,8 +168,16 @@ export class AppComponent implements OnInit {
   }
 
 
-
-
+  private parseCrew(s: string): number {
+    if (s.includes('-')) {
+      const [start, end] = s.split('-').map(Number);
+      return (start + end) / 2;
+    } else if (s.includes(',')) {
+      return s.split(',').map(Number).reduce((a, b) => a + b, 0);
+    } else {
+      return Number(s);
+    }
+  }
 
 
 }
