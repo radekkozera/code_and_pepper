@@ -4,9 +4,9 @@
         <mat-icon *ngIf="(gameType$ | async) === GameType.ROCKETS">flight</mat-icon>
     </div>
 
-    <div class="card__back" [ngClass]="{'card__back__winner': isWinner}">
+    <div data-cy="card-back" class="card__back" [ngClass]="{'card__back__winner': isWinner}">
 
-        <div class="card__back__icon">
+        <div class="card__back__icon" data-cy="game-card">
             <mat-icon *ngIf="(gameType$ | async) === GameType.PEOPLE">person</mat-icon>
             <mat-icon *ngIf="(gameType$ | async) === GameType.ROCKETS">flight</mat-icon>
         </div>
@@ -14,14 +14,14 @@
         <ng-container *ngIf="personResult">
 
             <span>{{personResult.properties.name}}</span>
-            <span>{{personResult.properties.mass}}</span>
+            <span data-cy="game-result">{{personResult.properties.mass}}</span>
 
         </ng-container>
 
         <ng-container *ngIf="starshipResult">
 
             <span>{{starshipResult.properties.model}}</span>
-            <span>{{starshipResult.properties.crew}}</span>
+            <span data-cy="game-result">{{starshipResult.properties.crew}}</span>
 
         </ng-container>
 

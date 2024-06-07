@@ -22,7 +22,6 @@ import { GameFinishModalComponent } from './components/game-finish/game-finish-m
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
-  public isLoading$: Subject<boolean> = new Subject<boolean>();
   public gameType$: Observable<GameType>;
   public isGameInProgress$: Observable<boolean>;
   public isPlayerOneWinner$: Observable<boolean>;
@@ -43,11 +42,11 @@ export class AppComponent implements OnInit {
 
   constructor(private _particlesService: NgParticlesService,
     private _apiService: ApiService, private _appState: StateService, private _dialog: MatDialog) {
-    
-    this.gameType$ = this._appState.gameState;
-    this.isGameInProgress$ = this._appState.isGameInProgress;
-    this.isPlayerOneWinner$ = this._appState.isPlayerOneWinner;
-    this.isPlayerTwoWinner$ = this._appState.isPlayerTwoWinner;
+
+    this.gameType$ = this._appState.gameState$;
+    this.isGameInProgress$ = this._appState.isGameInProgress$;
+    this.isPlayerOneWinner$ = this._appState.isPlayerOneWinner$;
+    this.isPlayerTwoWinner$ = this._appState.isPlayerTwoWinner$;
   }
 
 
@@ -69,7 +68,6 @@ export class AppComponent implements OnInit {
 
   public playGame(gameType: GameType): void {
     this._resetGame();
-    this._appState.isGameInProgress.next(true);
     this._getElements(gameType).pipe(
       map((response: ApiResponse<Person | Starship>) => this._getRandomElements(response.results)),
       switchMap((result: Person[] | Starship[]) => forkJoin(result.map((element: Person | Starship) => this._getElement(gameType, element.url)))
@@ -79,7 +77,7 @@ export class AppComponent implements OnInit {
         );
       }),
       delay(2500),
-      tap(() => this._openModal())
+      tap(() => this.openModal())
     ).subscribe()
   }
 
@@ -109,15 +107,15 @@ export class AppComponent implements OnInit {
     const winner = playerOne.properties.mass > playerTwo.properties.mass ? playerOne : playerTwo;
 
     if (winner === playerOne) {
-      this._appState.playerOneScore.next(this._appState.playerOneScore.value + 1);
-      this._appState.isPlayerOneWinner.next(true);
-      this._appState.isPlayerTwoWinner.next(false);
+      this._appState.playerOneScore$.next(this._appState.playerOneScore$.value + 1);
+      this._appState.isPlayerOneWinner$.next(true);
+      this._appState.isPlayerTwoWinner$.next(false);
     }
 
     if (winner === playerTwo) {
-      this._appState.playerTwoScore.next(this._appState.playerTwoScore.value + 1);
-      this._appState.isPlayerTwoWinner.next(true);
-      this._appState.isPlayerOneWinner.next(false);
+      this._appState.playerTwoScore$.next(this._appState.playerTwoScore$.value + 1);
+      this._appState.isPlayerTwoWinner$.next(true);
+      this._appState.isPlayerOneWinner$.next(false);
     }
 
   }
@@ -129,30 +127,34 @@ export class AppComponent implements OnInit {
     const winner = playerOne.properties.crew > playerTwo.properties.crew ? playerOne : playerTwo;
 
     if (winner === playerOne) {
-      this._appState.playerOneScore.next(this._appState.playerOneScore.value + 1);
-      this._appState.isPlayerOneWinner.next(true);
-      this._appState.isPlayerTwoWinner.next(false);
+      this._appState.playerOneScore$.next(this._appState.playerOneScore$.value + 1);
+      this._appState.isPlayerOneWinner$.next(true);
+      this._appState.isPlayerTwoWinner$.next(false);
     }
 
     if (winner === playerTwo) {
-      this._appState.playerTwoScore.next(this._appState.playerTwoScore.value + 1);
-      this._appState.isPlayerTwoWinner.next(true);
-      this._appState.isPlayerOneWinner.next(false);
+      this._appState.playerTwoScore$.next(this._appState.playerTwoScore$.value + 1);
+      this._appState.isPlayerTwoWinner$.next(true);
+      this._appState.isPlayerOneWinner$.next(false);
     }
   }
 
-  private _openModal(): void {
+  openModal(): void {
     this._dialog.open(GameFinishModalComponent, {
-      height: '200px',
-      width: '300px',
+      height: "200px",
+      width: "350px",
       position: {
         top: '100px'
       },
-      disableClose: true
+      disableClose: true,
+      panelClass: 'container'
     })
   }
 
   private _resetGame(): void {
+    this._appState.isGameInProgress$.next(true);
+    this._appState.isPlayerOneWinner$.next(false);
+    this._appState.isPlayerTwoWinner$.next(false);
     this.playerOnePerson = undefined;
     this.playerTwoPerson = undefined;
     this.playerOneStarship = undefined;

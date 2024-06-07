@@ -15,10 +15,10 @@ export class GameStatsComponent {
   public playerTwoScore$: Observable<number>;
 
   constructor(private _appState: StateService) {
-    this.gameType$ = this._appState.gameState;
-    this.isGameInProgress$ = this._appState.isGameInProgress;
-    this.playerOneScore$ = this._appState.playerOneScore;
-    this.playerTwoScore$ = this._appState.playerTwoScore;
+    this.gameType$ = this._appState.gameState$;
+    this.isGameInProgress$ = this._appState.isGameInProgress$;
+    this.playerOneScore$ = this._appState.playerOneScore$;
+    this.playerTwoScore$ = this._appState.playerTwoScore$;
   }
 
   public readonly GameType = GameType;
@@ -26,7 +26,7 @@ export class GameStatsComponent {
   public selectedGame: GameType | undefined = GameType.PEOPLE;
 
   public selectGame(gameType: GameType) {
-    this._appState.gameState.next(gameType);
+    this._appState.gameState$.next(gameType);
   }
 
 }

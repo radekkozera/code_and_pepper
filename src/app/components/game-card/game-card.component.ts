@@ -22,8 +22,8 @@ export class GameCardComponent {
 
 
   constructor(private _appState: StateService) {
-    this.gameType$ = this._appState.gameState;
-    this.isGameInProgress$ = this._appState.isGameInProgress;
+    this.gameType$ = this._appState.gameState$;
+    this.isGameInProgress$ = this._appState.isGameInProgress$;
   }
 
 

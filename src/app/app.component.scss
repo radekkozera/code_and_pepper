@@ -61,27 +61,8 @@ canvas {
     vertical-align: bottom;
 }
 
-/* ---- tsparticles container ---- */
 #tsparticles {
     position: fixed;
     width: 100%;
     height: 100%;
-}
-
-.test {
-    position: fixed;
-    z-index: 100;
-    background-color: red;
-    color: red
-}
-
-.game__type {
-    position: fixed;
-    top: 3vh;
-    right: 50%;
-    transform: translateX(50%);
-    z-index: 100;
-    background-color: red;
-    display: flex;
-    gap: 100px;
 }
