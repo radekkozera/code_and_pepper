@@ -1,10 +1,9 @@
-import { ComponentFixture, TestBed } from "@angular/core/testing";
+import { ComponentFixture, TestBed, fakeAsync, tick } from "@angular/core/testing";
 import { AppComponent } from "./app.component";
 import { StateService } from "./services/state.service";
 import { ApiService } from "./services/api.service";
 import { MatDialog } from "@angular/material/dialog";
 import { of } from "rxjs";
-import { PersonResult } from "./models/person-result";
 import { CUSTOM_ELEMENTS_SCHEMA } from "@angular/core";
 import { GameType } from "./helpers/game-types";
 
@@ -29,6 +28,9 @@ describe('AppComponent', () => {
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
     })
 
+
+    mockApiService = TestBed.inject(ApiService) as jasmine.SpyObj<ApiService>;
+
     fixture = TestBed.createComponent(AppComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
@@ -47,5 +49,24 @@ describe('AppComponent', () => {
     expect(component.playGame).toHaveBeenCalled();
   });
 
+  it('should call getElements with people game type', () => {
+    mockApiService.getPeople.and.returnValue(of({ results: [] } as any));
+    component.playGame(GameType.PEOPLE);
+    expect(mockApiService.getPeople).toHaveBeenCalled();
+    expect(mockApiService.getStarships).not.toHaveBeenCalled();
+  });
 
+  it('should call getElements with starships game type', () => {
+    mockApiService.getStarships.and.returnValue(of({ results: [] } as any));
+    component.playGame(GameType.ROCKETS);
+    expect(mockApiService.getPeople).not.toHaveBeenCalled();
+    expect(mockApiService.getStarships).toHaveBeenCalled();
+  });
+
+  it('should call _resetGame before starting the game', () => {
+    spyOn<any>(component, '_resetGame');
+    mockApiService.getPeople.and.returnValue(of({ results: [] } as any));
+    component.playGame(GameType.PEOPLE);
+    expect(component['_resetGame']).toHaveBeenCalled();
+  });
 });

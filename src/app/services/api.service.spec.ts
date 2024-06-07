@@ -1,12 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { ApiService } from './api.service';
-import { ApiResponse } from '../models/api-response';
-import { Person } from '../models/person';
-import { ElementResponse } from '../models/element.response';
-import { PersonResult } from '../models/person-result';
-import { Starship } from '../models/starship';
-import { StarshipResult } from '../models/starship.result';
 
 describe('ApiService', () => {
     let service: ApiService;
