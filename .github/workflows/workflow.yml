@@ -70,4 +70,4 @@ jobs:
       run: sleep 10
 
     - name: Run E2E tests
-      run: npm run e2e
+      run: npm run cypress:run
