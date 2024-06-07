@@ -6,27 +6,29 @@ on:
       - main
 
 jobs:
-   runs-on: ubuntu-latest
-    needs: install-dependencies
-    steps:
-      - uses: actions/checkout@v4
 
-      - name: Use Node.js 20
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
+  test:
+    runs-on: ubuntu-latest
+      needs: install-dependencies
+      steps:
+        - uses: actions/checkout@v4
 
-      - uses: actions/cache/restore@v4
-        id: cache-npm
-        with:
-          path: ~/.npm
-          key: npm-
+        - name: Use Node.js 20
+          uses: actions/setup-node@v4
+          with:
+            node-version: 20
 
-      - name: Install node_modules
-        run: npm ci
+        - uses: actions/cache/restore@v4
+          id: cache-npm
+          with:
+            path: ~/.npm
+            key: npm-
 
-      - name: Run tests
-        run: npm run test
+        - name: Install node_modules
+          run: npm ci
+
+        - name: Run tests
+          run: npm run test
 
   e2e-tests:
    runs-on: ubuntu-latest
