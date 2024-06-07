@@ -145,9 +145,6 @@ export class CardGame {
             scorePlayerTwo = parseInt(text);
         });
 
-        cy.wait(this.DELAY_TIME);
-
-
         cy.then(() => {
 
             console.log(scorePlayerOne)

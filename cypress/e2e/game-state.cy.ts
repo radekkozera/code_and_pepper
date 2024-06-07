@@ -8,31 +8,31 @@ describe('Test Card Game', () => {
         cy.visit('/');
     });
 
-    // it('should increase score and highlight winner', () => {
-    //     player.shouldIncreaseScoreAndHighlightWinner();
-    // })
+    it('should increase score and highlight winner', () => {
+        player.shouldIncreaseScoreAndHighlightWinner();
+    })
 
     it('should highlight winning score', () => {
         player.shouldHighlightWinningScore();
     });
 
-    // it('should check initial state', () => {
-    //     player.shouldCheckInitialState();
-    // })
+    it('should check initial state', () => {
+        player.shouldCheckInitialState();
+    })
 
-    // it('should toggle game type', () => {
-    //     player.shouleToggleGameType();
-    // })
+    it('should toggle game type', () => {
+        player.shouleToggleGameType();
+    })
 
-    // it('should flip cards after start', () => {
-    //     player.shouldFlipCardsAfterStart();
-    // })
+    it('should flip cards after start', () => {
+        player.shouldFlipCardsAfterStart();
+    })
 
-    // it('should display modal', () => {
-    //     player.shouldDisplayModal();
-    // })
+    it('should display modal', () => {
+        player.shouldDisplayModal();
+    })
 
-    // it('should reset score', () => {
-    //     player.shouldResetScore();
-    // })
+    it('should reset score', () => {
+        player.shouldResetScore();
+    })
 });
