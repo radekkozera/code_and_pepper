@@ -13,13 +13,17 @@ export class GameFinishModalComponent {
   public isPlayerTwoWinner$: Observable<boolean>;
 
 
-  constructor(private _dialogRef: MatDialogRef<GameFinishModalComponent>, private _appState: StateService) { 
+  constructor(private _dialogRef: MatDialogRef<GameFinishModalComponent>, private _appState: StateService) {
     this.isPlayerOneWinner$ = this._appState.isPlayerOneWinner$;
     this.isPlayerTwoWinner$ = this._appState.isPlayerTwoWinner$;
   }
 
 
   closeDialog(resetScore?: boolean): void {
+    if (resetScore) {
+      this._appState.playerOneScore$.next(0);
+      this._appState.playerTwoScore$.next(0);
+    }
     this._appState.isGameInProgress$.next(false);
     this._dialogRef.close()
   }

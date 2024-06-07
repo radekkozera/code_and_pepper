@@ -8,6 +8,8 @@ import { PersonResult } from "../models/person-result";
 export class StateService {
     public gameState$ = new BehaviorSubject<GameType>(GameType.PEOPLE);
 
+    public showStart$ = new BehaviorSubject<boolean>(true);
+
     public playerOneScore$ = new BehaviorSubject<number>(0);
     public playerTwoScore$ = new BehaviorSubject<number>(0);
 

@@ -37,6 +37,8 @@
         font-size: 20px;
         color: white;
         border-radius: 25px;
+        transform: rotateY(180deg);
+        justify-content: space-evenly;
     }
 
     &__back {

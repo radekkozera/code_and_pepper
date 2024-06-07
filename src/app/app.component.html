@@ -6,16 +6,16 @@
     <app-game-stats></app-game-stats>
   </div>
   <div class="main__cards">
-    <app-game-card data-cy="player-one" [isWinner]="!!(isPlayerOneWinner$ | async)" [personResult]="playerOnePerson"
+    <app-game-card [player]="1" data-cy="player-one-card" [isWinner]="!!(isPlayerOneWinner$ | async)" [personResult]="playerOnePerson"
       [starshipResult]="playerOneStarship"></app-game-card>
 
-    <app-game-card data-cy="player-two" [isWinner]="!!(isPlayerTwoWinner$ | async)" [personResult]="playerTwoPerson"
+    <app-game-card [player]="2" data-cy="player-two-card" [isWinner]="!!(isPlayerTwoWinner$ | async)" [personResult]="playerTwoPerson"
       [starshipResult]="playerTwoStarship"></app-game-card>
   </div>
 
 
-
-  <button *ngIf="(gameType$ | async) as gameType" style="position: fixed; z-index: 100;"
-    (click)="openModal()">CHECK</button>
+  <ng-container *ngIf="showStart$ | async">
+    <button data-cy="game-start" class="main__button" *ngIf="(gameType$ | async) as gameType" (click)="playGame(gameType)">START</button>
+  </ng-container>
 
 </div>

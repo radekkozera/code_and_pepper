@@ -1,27 +1,27 @@
-<mat-card class="card" [ngClass]="{'card__flipped': isGameInProgress$ | async}">
+<mat-card data-cy="game-card" class="card" [ngClass]="{'card__flipped': isGameInProgress$ | async}">
     <div class="card__front">
         <mat-icon *ngIf="(gameType$ | async) === GameType.PEOPLE">person</mat-icon>
         <mat-icon *ngIf="(gameType$ | async) === GameType.ROCKETS">flight</mat-icon>
     </div>
 
-    <div data-cy="card-back" class="card__back" [ngClass]="{'card__back__winner': isWinner}">
+    <div [attr.data-cy]="'game-card-player-' + player" class="card__back" [ngClass]="{'card__back__winner': isWinner}">
 
-        <div class="card__back__icon" data-cy="game-card">
-            <mat-icon *ngIf="(gameType$ | async) === GameType.PEOPLE">person</mat-icon>
-            <mat-icon *ngIf="(gameType$ | async) === GameType.ROCKETS">flight</mat-icon>
+        <div class="card__back__icon">
+            <mat-icon data-cy="game-card-people" *ngIf="(gameType$ | async) === GameType.PEOPLE">person</mat-icon>
+            <mat-icon data-cy="game-card-starships" *ngIf="(gameType$ | async) === GameType.ROCKETS">flight</mat-icon>
         </div>
 
         <ng-container *ngIf="personResult">
 
-            <span>{{personResult.properties.name}}</span>
-            <span data-cy="game-result">{{personResult.properties.mass}}</span>
+            <span class="card__back__label">{{personResult.properties.name}}</span>
+            <span [attr.data-cy]="'game-result-player-' + player">{{personResult.properties.mass}}</span>
 
         </ng-container>
 
         <ng-container *ngIf="starshipResult">
 
-            <span>{{starshipResult.properties.model}}</span>
-            <span data-cy="game-result">{{starshipResult.properties.crew}}</span>
+            <span class="card__back__label">{{starshipResult.properties.model}}</span>
+            <span [attr.data-cy]="'game-result-player-' + player">{{starshipResult.properties.crew}}</span>
 
         </ng-container>
 

@@ -14,6 +14,8 @@ export class GameCardComponent {
   public gameType$: Observable<GameType>;
   public isGameInProgress$: Observable<boolean>;
 
+  @Input() public player?: number;
+
   @Input() public isWinner: boolean = false;
 
   @Input() public personResult?: PersonResult;

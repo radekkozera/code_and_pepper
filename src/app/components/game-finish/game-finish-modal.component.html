@@ -1,6 +1,6 @@
-<div class="game__finish">
+<div class="game__finish" data-cy="game-finish">
 
-    <ng-container *ngIf="(isPlayerOneWinner$ | async) && (isPlayerTwoWinner$ | async) else draw">
+    <ng-container *ngIf="(isPlayerOneWinner$ | async) || (isPlayerTwoWinner$ | async) else draw">
 
         <div class="game__finish__text" *ngIf="(isPlayerOneWinner$ | async)">Player One is A Winner!</div>
         <div class="game__finish__text" *ngIf="(isPlayerTwoWinner$ | async)">Player Two is A Winner!</div>
@@ -8,8 +8,8 @@
     </ng-container>
 
     <div class="game__finish__actions">
-        <button (click)="closeDialog()">Reset Score</button>
-        <button (click)="closeDialog()">Continue</button>
+        <button (click)="closeDialog(true)" data-cy="game-reset">Reset Score</button>
+        <button (click)="closeDialog()" data-cy="game-continue">Continue</button>
     </div>
 
 </div>

@@ -26,6 +26,7 @@ export class AppComponent implements OnInit {
   public isGameInProgress$: Observable<boolean>;
   public isPlayerOneWinner$: Observable<boolean>;
   public isPlayerTwoWinner$: Observable<boolean>;
+  public showStart$: Observable<boolean>;
 
   public isCardsVisible: boolean = false;
   public particlesOptions: any = particlesOptions;
@@ -47,6 +48,7 @@ export class AppComponent implements OnInit {
     this.isGameInProgress$ = this._appState.isGameInProgress$;
     this.isPlayerOneWinner$ = this._appState.isPlayerOneWinner$;
     this.isPlayerTwoWinner$ = this._appState.isPlayerTwoWinner$;
+    this.showStart$ = this._appState.showStart$;
   }
 
 
@@ -101,7 +103,7 @@ export class AppComponent implements OnInit {
     }
   }
 
-  private _determineWinnerPeople(playerOne: PersonResult, playerTwo: PersonResult): any {
+  private _determineWinnerPeople(playerOne: PersonResult, playerTwo: PersonResult): void {
     this.playerOnePerson = playerOne;
     this.playerTwoPerson = playerTwo;
     const winner = playerOne.properties.mass > playerTwo.properties.mass ? playerOne : playerTwo;
@@ -147,11 +149,16 @@ export class AppComponent implements OnInit {
         top: '100px'
       },
       disableClose: true,
-      panelClass: 'container'
+    }).afterClosed().pipe(
+      delay(3000)
+    ).subscribe(() => {
+      this._appState.showStart$.next(true);
+
     })
   }
 
   private _resetGame(): void {
+    this._appState.showStart$.next(false);
     this._appState.isGameInProgress$.next(true);
     this._appState.isPlayerOneWinner$.next(false);
     this._appState.isPlayerTwoWinner$.next(false);
