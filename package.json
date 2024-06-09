@@ -10,7 +10,7 @@
     "e2e": "ng e2e",
     "cypress:open": "cypress open",
     "cypress:run": "npx cypress run",
-    "test:ci": "ng test --browsers=ChromeHeadless"
+    "test:ci": "ng test --browsers=ChromeHeadless --no-watch"
   },
   "private": true,
   "dependencies": {
