@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { GameStatsComponent } from './game-stats.component';
 import { StateService } from '../../services/state.service';
 import { GameType } from '../../helpers/game-types';
-import { BehaviorSubject, of, Subject } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 describe('GameStatsComponent', () => {

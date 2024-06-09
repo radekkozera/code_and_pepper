@@ -14,8 +14,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { GameStatsComponent } from './components/game-stats/game-stats.component';
 import { GameFinishModalComponent } from './components/game-finish/game-finish-modal.component';
 import { MatDialogModule } from '@angular/material/dialog'
-import { StateService } from './services/state.service';
-
 
 @NgModule({
   declarations: [

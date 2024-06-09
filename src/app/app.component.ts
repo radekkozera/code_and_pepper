@@ -3,7 +3,7 @@ import { NgParticlesService } from '@tsparticles/angular';
 import { loadSlim } from '@tsparticles/slim';
 import { particlesOptions } from './helpers/particles';
 import { Engine } from '@tsparticles/engine';
-import { Observable, Subject, delay, forkJoin, map, switchMap, tap } from 'rxjs';
+import { Observable, delay, forkJoin, map, switchMap, tap } from 'rxjs';
 import { ApiService } from './services/api.service';
 import { GameType } from './helpers/game-types';
 import { StarshipResult } from './models/starship.result';
